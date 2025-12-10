@@ -36,7 +36,10 @@ const RequestCard = ({ request, onAccept }) => {
       )}
       
       {request.status === 'accepted' && (
-        <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        <button 
+          onClick={() => window.location.href = `/chat/${request.matchId}`} // Link to chat
+          className="mt-4 w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-bold shadow"
+        >
           Open Chat
         </button>
       )}

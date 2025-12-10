@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext, { AuthProvider } from './context/AuthContext';
+import ChatPage from './pages/ChatPage'; // <--- Add this
 
 // Import Pages
 import Home from './pages/Home'; // <--- NEW IMPORT
@@ -68,6 +69,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} /> {/* Protected Dashboard */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/chat/:matchId" element={<ChatPage />} /> {/* <--- Add this line */}
           </Routes>
         </div>
       </AuthProvider>
