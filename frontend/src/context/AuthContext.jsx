@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     localStorage.setItem('userInfo', JSON.stringify(userData));
     setUser(userData);
-    navigate('/'); // Redirect to Dashboard
+    navigate('/dashboard'); // Redirect to Dashboard
   };
 
   // 3. Logout Function
