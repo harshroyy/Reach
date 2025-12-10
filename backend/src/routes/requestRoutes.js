@@ -15,4 +15,8 @@ router.get('/my-requests', protect, requestController.getMyRequests);
 // Uses 'protect' because you must be logged in to accept
 router.put('/:id/accept', protect, requestController.acceptRequest);
 
+// PUT /api/requests/:id/decline
+// Uses 'protect' because you must be logged in to decline
+router.put('/:id/decline', protect, requestController.declineRequest);
+
 module.exports = router;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RequestCard = ({ request, onAccept }) => {
+const RequestCard = ({ request, onAccept, onDecline, onChatClick }) => {
   const isPending = request.status === 'pending';
 
   return (
@@ -29,7 +29,10 @@ const RequestCard = ({ request, onAccept }) => {
           >
             Accept Request
           </button>
-          <button className="bg-red-100 text-red-600 px-4 py-2 rounded hover:bg-red-200 text-sm font-medium">
+          <button 
+            onClick={() => onDecline(request._id)} 
+            className="bg-red-100 text-red-600 px-4 py-2 rounded hover:bg-red-200 text-sm font-medium"
+          >
             Decline
           </button>
         </div>
@@ -37,7 +40,7 @@ const RequestCard = ({ request, onAccept }) => {
       
       {request.status === 'accepted' && (
         <button 
-          onClick={() => window.location.href = `/chat/${request.matchId}`} // Link to chat
+          onClick={onChatClick}
           className="mt-4 w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-bold shadow"
         >
           Open Chat

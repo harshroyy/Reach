@@ -60,6 +60,20 @@ const Dashboard = () => {
     }
   };
 
+  // Add this function below handleAcceptRequest
+  const handleDeclineRequest = async (requestId) => {
+    if(!window.confirm("Are you sure you want to decline this request?")) return;
+
+    try {
+      await api.put(`/requests/${requestId}/decline`);
+      alert("Request Declined");
+      // Refresh the list to remove it (or show it as declined)
+      window.location.reload(); 
+    } catch (err) {
+      alert("Failed to decline request");
+    }
+  };
+
   if (loading) return <div className="p-10 text-center">Loading...</div>;
 
   return (
@@ -136,6 +150,7 @@ const Dashboard = () => {
               key={req._id} 
               request={req} 
               onAccept={handleAcceptRequest}
+              onDecline={handleDeclineRequest} // <--- PASS IT HERE
               onChatClick={() => navigate(`/chat/${req.matchId}`)} 
             />
           ))}

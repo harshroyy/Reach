@@ -99,6 +99,32 @@ exports.acceptRequest = async (req, res) => {
   }
 };
 
+// @desc    Decline a request
+// @route   PUT /api/requests/:id/decline
+exports.declineRequest = async (req, res) => {
+  try {
+    const requestId = req.params.id;
+    const helperId = req.user.id;
+
+    // Find and update in one go
+    // Ensure only the assigned helper can decline it
+    const request = await HelpRequest.findOneAndUpdate(
+      { _id: requestId, helperId, status: 'pending' },
+      { status: 'declined' },
+      { new: true }
+    );
+
+    if (!request) {
+      return res.status(404).json({ msg: 'Request not found or unauthorized' });
+    }
+
+    res.json({ msg: 'Request declined', request });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
 // @desc    Get requests for current user
 // @route   GET /api/requests/my-requests
 exports.getMyRequests = async (req, res) => {
