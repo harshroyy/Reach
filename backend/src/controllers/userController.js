@@ -11,35 +11,6 @@ const generateToken = (id) => {
 
 // @desc    Register a new user
 // @route   POST /api/users/register
-// @access  Public
-// ... (keep your existing imports and registerUser code) ...
-
-exports.loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // 1. Check for email
-    // We explicitly select '+passwordHash' because we set select:false in the model
-    const user = await User.findOne({ email }).select('+passwordHash');
-
-    // 2. Check if user exists AND password matches
-    if (user && (await bcrypt.compare(password, user.passwordHash))) {
-      res.json({
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token: generateToken(user._id)
-      });
-    } else {
-      res.status(401).json({ message: 'Invalid email or password' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-};
-
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, role, city } = req.body;
@@ -81,6 +52,46 @@ exports.registerUser = async (req, res) => {
       res.status(400).json({ message: 'Invalid user data' });
     }
 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// @desc    Login a user
+// @route   POST /api/users/login
+exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Check for email
+    const user = await User.findOne({ email }).select('+passwordHash');
+
+    // 2. Check if user exists AND password matches
+    if (user && (await bcrypt.compare(password, user.passwordHash))) {
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token: generateToken(user._id)
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// @desc    Get all helpers
+// @route   GET /api/users/helpers
+exports.getHelpers = async (req, res) => {
+  try {
+    // Find users with role 'helper' and exclude the passwordHash field
+    const helpers = await User.find({ role: 'helper' }).select('-passwordHash');
+    res.json(helpers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

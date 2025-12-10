@@ -98,3 +98,29 @@ exports.acceptRequest = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// @desc    Get requests for current user
+// @route   GET /api/requests/my-requests
+exports.getMyRequests = async (req, res) => {
+  try {
+    const role = req.user.role;
+    let requests;
+
+    if (role === 'helper') {
+      // If I am a helper, show me people asking ME for help
+      requests = await HelpRequest.find({ helperId: req.user.id })
+        .populate('receiverId', 'name city email') // Get sender details
+        .sort({ createdAt: -1 });
+    } else {
+      // If I am a receiver, show me requests I SENT
+      requests = await HelpRequest.find({ receiverId: req.user.id })
+        .populate('helperId', 'name city')
+        .sort({ createdAt: -1 });
+    }
+
+    res.json(requests);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
