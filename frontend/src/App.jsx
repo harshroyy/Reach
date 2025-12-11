@@ -1,13 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext, { AuthProvider } from './context/AuthContext';
-import ChatPage from './pages/ChatPage'; // <--- Add this
 
 // Import Pages
-import Home from './pages/Home'; // <--- NEW IMPORT
+import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import ChatPage from './pages/ChatPage';
 
 // --- Navbar Component ---
 const Navbar = () => {
@@ -16,19 +16,17 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Go to Home after logout
+    navigate('/'); 
   };
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-extrabold text-blue-600 tracking-tight">HelpLink</span>
           </Link>
 
-          {/* Links */}
           <div className="flex items-center gap-4">
             {user ? (
               <>
@@ -57,21 +55,33 @@ const Navbar = () => {
   );
 };
 
+// --- Layout Component (This fixes the Double Navbar) ---
+const MainLayout = () => {
+  const location = useLocation();
+  
+  // Hide global navbar ONLY on the home page ('/')
+  const showNavbar = location.pathname !== '/';
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {showNavbar && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/chat/:matchId" element={<ChatPage />} />
+      </Routes>
+    </div>
+  );
+};
+
 // --- Main App ---
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-white">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />           {/* Public Landing Page */}
-            <Route path="/dashboard" element={<Dashboard />} /> {/* Protected Dashboard */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/chat/:matchId" element={<ChatPage />} /> {/* <--- Add this line */}
-          </Routes>
-        </div>
+        <MainLayout />
       </AuthProvider>
     </Router>
   );
