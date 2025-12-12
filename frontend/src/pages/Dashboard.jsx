@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, SlidersHorizontal, Loader2, Sparkles, LayoutList, Users } from 'lucide-react';
+// Added missing icons: Clock, CheckCircle2, XCircle, MessageCircle
+import { Search, MapPin, SlidersHorizontal, Loader2, Sparkles, LayoutList, Users, Clock, CheckCircle2, XCircle, MessageCircle } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
 import api from '../services/api';
 import HelperCard from '../components/dashboard/HelperCard';
@@ -69,6 +70,30 @@ const Dashboard = () => {
       window.location.reload();
     } catch (err) {
       alert("Failed to decline");
+    }
+  };
+
+  // --- NEW HELPER FUNCTION FOR STATUS BADGES ---
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'accepted':
+        return (
+          <span className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-100">
+            <CheckCircle2 size={14} /> Accepted
+          </span>
+        );
+      case 'declined':
+        return (
+          <span className="flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-700 rounded-full text-xs font-bold border border-red-100">
+            <XCircle size={14} /> Declined
+          </span>
+        );
+      default:
+        return (
+          <span className="flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-700 rounded-full text-xs font-bold border border-yellow-100">
+            <Clock size={14} /> Pending
+          </span>
+        );
     }
   };
 
@@ -166,7 +191,7 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* VIEW 2: MY REQUESTS */}
+            {/* VIEW 2: MY REQUESTS (Redesigned) */}
             {activeTab === 'requests' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <h2 className="text-2xl font-bold text-[#181E4B] mb-6">Track Your Requests</h2>
@@ -174,33 +199,71 @@ const Dashboard = () => {
                 {myRequests.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {myRequests.map((req) => (
-                      <div key={req._id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                        <div className="flex justify-between items-start mb-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${req.status === 'accepted' ? 'bg-green-100 text-green-700' :
-                            req.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600'
-                            }`}>
-                            {req.status}
-                          </span>
-                          <span className="text-xs text-gray-400">
-                            {new Date(req.createdAt).toLocaleDateString()}
-                          </span>
+                      <div key={req._id} className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col h-full relative overflow-hidden group">
+                        
+                        {/* Status Stripe */}
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${
+                          req.status === 'accepted' ? 'bg-green-500' : 
+                          req.status === 'declined' ? 'bg-red-400' : 'bg-yellow-400'
+                        }`}></div>
+
+                        {/* Top: Helper Info */}
+                        <div className="flex justify-between items-start mb-4 pl-3">
+                          <div className="flex items-center gap-3">
+                            {/* Helper Avatar Circle */}
+                            <div className="w-12 h-12 rounded-full border-2 border-white shadow-sm overflow-hidden bg-gray-100">
+                              {req.helperId?.profileImage ? (
+                                <img src={req.helperId.profileImage} alt="Helper" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 font-bold text-lg">
+                                  {req.helperId?.name?.charAt(0) || '?'}
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Helper Name */}
+                            <div>
+                              <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">Request to</p>
+                              <h3 className="font-bold text-gray-900 text-lg leading-none">{req.helperId?.name || 'Unknown Helper'}</h3>
+                            </div>
+                          </div>
+                          
+                          {/* Status Badge Icon */}
+                          {getStatusBadge(req.status)}
                         </div>
 
-                        <h3 className="font-bold text-gray-900 mb-1">{req.reason}</h3>
-                        <p className="text-sm text-gray-500 mb-4">To: {req.helperId?.name || 'Unknown'}</p>
-
-                        {req.status === 'accepted' ? (
-                          <button
-                            onClick={() => navigate(`/chat/${req.matchId}`)}
-                            className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-green-200"
-                          >
-                            Open Chat
-                          </button>
-                        ) : (
-                          <div className="w-full py-2 bg-gray-50 text-gray-400 text-center rounded-xl text-sm font-medium">
-                            Waiting for response...
+                        {/* Content: Reason & Details */}
+                        <div className="pl-3 mb-6 flex-grow">
+                          <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                            <p className="text-sm font-bold text-gray-800 mb-1">{req.reason}</p>
+                            <p className="text-sm text-gray-500 line-clamp-2">{req.details}</p>
                           </div>
-                        )}
+                          <p className="text-xs text-gray-400 mt-2 text-right">
+                            Sent on {new Date(req.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+
+                        {/* Footer Action */}
+                        <div className="pl-3 mt-auto">
+                          {req.status === 'accepted' ? (
+                            <button 
+                              onClick={() => navigate(`/chat/${req.matchId}`)}
+                              className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold shadow-lg shadow-green-200 transition-all flex items-center justify-center gap-2"
+                            >
+                              <MessageCircle size={18} />
+                              Open Chat
+                            </button>
+                          ) : req.status === 'declined' ? (
+                            <div className="w-full py-3 bg-red-50 text-red-400 text-center rounded-xl text-sm font-medium border border-red-100 opacity-70">
+                              Request Declined
+                            </div>
+                          ) : (
+                            <div className="w-full py-3 bg-yellow-50 text-yellow-600 text-center rounded-xl text-sm font-medium border border-yellow-100 animate-pulse">
+                              Waiting for response...
+                            </div>
+                          )}
+                        </div>
+
                       </div>
                     ))}
                   </div>
@@ -210,7 +273,7 @@ const Dashboard = () => {
                       <LayoutList size={32} />
                     </div>
                     <h3 className="text-lg font-bold text-gray-700">No requests yet</h3>
-                    <p className="text-gray-500 mt-1">Go to "Find Helpers" to start a request.</p>
+                    <p className="text-gray-500 mt-1">Go to "Request Support" to start a new request.</p>
                     <button
                       onClick={() => setActiveTab('helpers')}
                       className="mt-4 text-blue-600 font-bold hover:underline"
