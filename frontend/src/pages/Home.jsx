@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, MessageCircle, Heart } from "lucide-react";
+import { Shield, MessageCircle, Heart, CheckCircle2 } from "lucide-react"; // Added CheckCircle2
 import heroImg from '../assets/hero.png';
-import logo from '../assets/logo.png';
+import logo2 from '../assets/logo2.png';
+import helpImg from '../assets/help.png';
 
 const Home = () => {
   return (
@@ -10,23 +11,17 @@ const Home = () => {
 
       {/* --- NAVBAR --- */}
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/50 border-b border-white/20">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-4">
           <div className="flex items-center justify-between">
             {/* Logo Section */}
-            <div className="flex items-center gap-2">
-              
-              {/* Logo Container - Fixed height, auto width, no overflow hidden */}
-              <div className="h-10 w-auto flex items-center justify-center">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-auto flex items-center justify-center">
                 <img
-                  src={logo}
+                  src={logo2}
                   alt="Reach Logo"
                   className="h-full w-auto object-contain"
                 />
               </div>
-
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Reach
-              </span>
             </div>
 
             {/* Auth Buttons */}
@@ -53,7 +48,7 @@ const Home = () => {
                 className="text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-bold text-[#181E4B] leading-[1.1] tracking-tight"
                 style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
               >
-                Where <span className="text-[#747def]">Kindness</span><br />
+                Where <span className="text-[#F4616D]">Kindness</span><br />
                 Finds a <br />
                 <span className="text-[#747def]">Destination</span>
               </h1>
@@ -62,34 +57,28 @@ const Home = () => {
                 We bridge the gap between giving and need. Skip the uncertainty and connect directly with verified people seeking genuine support.
               </p>
 
-              {/* UPDATED BUTTONS */}
               <div className="flex flex-wrap gap-4 pt-4">
-                
-                {/* Get Help - Outlined but matching style */}
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="px-8 py-4 rounded-2xl border-2 border-[#747def] text-[#747def] hover:bg-[#747def]/5 transition-all duration-200 font-bold text-lg"
                   style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
                 >
                   Get Help
                 </Link>
-                
-                {/* Give Help - Matches the 'I want to help' image style */}
-                <Link 
-                  to="/register" 
+
+                <Link
+                  to="/register"
                   className="px-8 py-4 rounded-2xl bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-xl shadow-[#F4616D]/25 font-bold text-lg"
                   style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
                 >
                   I Want to Help
                 </Link>
-
               </div>
             </div>
 
             {/* Image Right */}
             <div className="relative w-full h-full flex justify-end">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-3xl blur-3xl transform scale-90 translate-y-4"></div>
-
               <img
                 src={heroImg}
                 alt="Diverse people connecting"
@@ -105,19 +94,19 @@ const Home = () => {
         <div className="max-w-[1440px] mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
 
-            {/* Card 1: Verified Helpers */}
-            <div className="backdrop-blur-md bg-white/70 rounded-3xl p-8 border border-white/40 hover:-translate-y-1 transition-all duration-300">
+            {/* Card 1 */}
+            <div className="backdrop-blur-xl bg-white/90 rounded-3xl p-8 border border-white/60 shadow-xl shadow-blue-900/5 hover:-translate-y-1 transition-all duration-300">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
                 <Shield className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3 text-gray-800">Verified Helpers</h3>
+              <h3 className="text-2xl font-semibold mb-3 text-gray-800">Connect with Confidence</h3>
               <p className="text-gray-600 leading-relaxed">
-                Every helper is verified through our comprehensive background check process to ensure your safety.
+                We verify every helper before they join, ensuring a safe and transparent environment for meaningful support.
               </p>
             </div>
 
-            {/* Card 2: Instant Chat */}
-            <div className="backdrop-blur-md bg-white/70 rounded-3xl p-8 border border-white/40 hover:-translate-y-1 transition-all duration-300 md:col-span-1 relative overflow-hidden group">
+            {/* Card 2 */}
+            <div className="backdrop-blur-xl bg-white/90 rounded-3xl p-8 border border-white/60 shadow-xl shadow-blue-900/5 hover:-translate-y-1 transition-all duration-300 md:col-span-1 relative overflow-hidden group">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-400 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20">
                 <MessageCircle className="w-7 h-7 text-white" />
               </div>
@@ -143,16 +132,68 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Card 3: Community Safe */}
-            <div className="backdrop-blur-md bg-white/70 rounded-3xl p-8 border border-white/40 hover:-translate-y-1 transition-all duration-300 shadow-none">
+            {/* Card 3 */}
+            <div className="backdrop-blur-xl bg-white/90 rounded-3xl p-8 border border-white/60 shadow-xl shadow-blue-900/5 hover:-translate-y-1 transition-all duration-300">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-400 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20">
                 <Heart className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3 text-gray-800">Community Safe</h3>
+              <h3 className="text-2xl font-semibold mb-3 text-gray-800">Safe & Transparent</h3>
               <p className="text-gray-600 leading-relaxed">
-                Built on trust and transparency. Our community guidelines and reporting tools keep everyone safe.
+                We prioritize your well-being with strict guidelines and easy reporting, keeping the platform secure for everyone.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- NEW ABOUT/MISSION SECTION --- */}
+      <section className="py-20 px-6 md:px-12 relative">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Image (Left) */}
+            <div className="relative order-2 lg:order-1">
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#747def]/20 to-purple-500/20 rounded-3xl blur-3xl transform -rotate-3"></div>
+              <img
+                src={helpImg}
+                alt="Community Support"
+                className="relative rounded-[2.5rem] shadow-2xl object-cover w-full h-[600px]"
+              />
+            </div>
+
+            {/* Text (Right) */}
+            <div className="order-1 lg:order-2 space-y-8">
+              <div className="space-y-4">
+                <h2
+                  className="text-4xl md:text-5xl font-bold text-[#181E4B] leading-tight"
+                  style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
+                >
+                  More Than Just a <br />
+                  <span className="text-[#747def]">Platform</span>
+                </h2>
+                <p className="text-lg text-[#5E6282] leading-relaxed" style={{ fontFamily: "Poppins, sans-serif" }}>
+                  In a world that often feels disconnected, Reach brings us back to our roots: people helping people. We believe that asking for help isn't a sign of weakness—it's the first step toward connection.
+                </p>
+              </div>
+
+              {/* Benefits List */}
+              <div className="space-y-4">
+                {[
+                  "Strengthens community bonds and trust",
+                  "Reduces stress for those in need",
+                  "Creates a positive cycle of kindness",
+                  "Verified and safe interactions"
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-4 p-4 rounded-2xl bg-white/50 border border-white/60 shadow-sm hover:bg-white hover:shadow-md transition-all duration-300">
+                    <div className="w-10 h-10 rounded-full bg-[#747def]/10 flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="w-5 h-5 text-[#747def]" />
+                    </div>
+                    <span className="text-[#181E4B] font-medium text-lg">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -162,12 +203,9 @@ const Home = () => {
         <div className="max-w-[1440px] mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white fill-white" />
+              <div className="h-10 w-auto">
+                <img src={logo2} alt="Logo" className="h-full w-auto" />
               </div>
-              <span className="font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Reach
-              </span>
             </div>
 
             <div className="flex gap-8">
