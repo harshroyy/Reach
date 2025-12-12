@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, MessageCircle, Heart, CheckCircle2 } from "lucide-react"; // Added CheckCircle2
+import { Shield, MessageCircle, Heart, CheckCircle2 } from "lucide-react";
 import heroImg from '../assets/hero.png';
 import logo2 from '../assets/logo2.png';
 import helpImg from '../assets/help.png';
+import LoginModal from '../components/LoginModal';
+import RegisterModal from '../components/RegisterModal'; // <--- RE-ADDED
 
 const Home = () => {
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false); // <--- RE-ADDED
+
+  // Toggle functions
+  const switchToRegister = () => {
+    setIsLoginOpen(false);
+    setTimeout(() => setIsRegisterOpen(true), 200);
+  };
+
+  const switchToLogin = () => {
+    setIsRegisterOpen(false);
+    setTimeout(() => setIsLoginOpen(true), 200);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-white font-sans text-gray-900">
+
+      {/* --- MOUNT MODALS --- */}
+      <LoginModal 
+        isOpen={isLoginOpen} 
+        onClose={() => setIsLoginOpen(false)} 
+        onSwitchToRegister={switchToRegister} 
+      />
+      
+      <RegisterModal 
+        isOpen={isRegisterOpen} 
+        onClose={() => setIsRegisterOpen(false)} 
+        onSwitchToLogin={switchToLogin}
+      />
 
       {/* --- NAVBAR --- */}
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/50 border-b border-white/20">
@@ -26,12 +55,19 @@ const Home = () => {
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
-              <Link to="/login" className="hidden md:block px-6 py-2 rounded-full text-gray-600 hover:text-blue-600 hover:bg-white/50 transition-all duration-200 font-medium">
+              <button 
+                onClick={() => setIsLoginOpen(true)}
+                className="hidden md:block px-6 py-2 rounded-full text-gray-600 hover:text-blue-600 hover:bg-white/50 transition-all duration-200 font-medium"
+              >
                 Login
-              </Link>
-              <Link to="/register" className="px-6 py-2 rounded-full bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-lg shadow-blue-600/25 font-medium">
+              </button>
+              
+              <button 
+                onClick={() => setIsRegisterOpen(true)} // <--- FIXED: Button instead of Link
+                className="px-6 py-2 rounded-full bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-lg shadow-blue-600/25 font-medium"
+              >
                 Register
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -58,21 +94,21 @@ const Home = () => {
               </p>
 
               <div className="flex flex-wrap gap-4 pt-4">
-                <Link
-                  to="/register"
+                <button
+                  onClick={() => setIsRegisterOpen(true)} // <--- FIXED
                   className="px-8 py-4 rounded-2xl border-2 border-[#747def] text-[#747def] hover:bg-[#747def]/5 transition-all duration-200 font-bold text-lg"
                   style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
                 >
                   Get Help
-                </Link>
+                </button>
 
-                <Link
-                  to="/register"
+                <button
+                  onClick={() => setIsRegisterOpen(true)} // <--- FIXED
                   className="px-8 py-4 rounded-2xl bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-xl shadow-[#F4616D]/25 font-bold text-lg"
                   style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
                 >
                   I Want to Help
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -146,7 +182,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- NEW ABOUT/MISSION SECTION --- */}
+      {/* --- ABOUT/MISSION SECTION --- */}
       <section className="py-20 px-6 md:px-12 relative">
         <div className="max-w-[1440px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
