@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
-import { Send, ArrowLeft, MoreVertical, Phone, Video } from 'lucide-react';
+import { Send, ArrowLeft, MoreVertical, Phone, Video, Paperclip, Smile } from 'lucide-react';
+import EmojiPicker from 'emoji-picker-react'; // <--- IMPORT THIS
 import api from '../services/api';
 import AuthContext from '../context/AuthContext';
 
@@ -17,7 +18,10 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [receiverName, setReceiverName] = useState("Chat"); // Store name of person we are talking to
+  const [receiver, setReceiver] = useState(null);
+  
+  // Emoji State
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -26,28 +30,40 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    // 1. Fetch Chat History & Details
     const fetchChatData = async () => {
       try {
         const res = await api.get(`/messages/${matchId}`);
         setMessages(res.data);
         
-        // Try to figure out the other person's name from the first message or match data
-        // ( Ideally, your backend /messages endpoint should return the 'match' object too )
-        // For now, we set a default, but you can enhance this later.
+        const otherUserMsg = res.data.find(m => {
+          const sId = typeof m.senderId === 'object' ? m.senderId._id : m.senderId;
+          return sId !== user._id;
+        });
+        
+        if (otherUserMsg && typeof otherUserMsg.senderId === 'object') {
+           setReceiver(otherUserMsg.senderId);
+        } else {
+           try {
+             const matchRes = await api.get(`/matches/${matchId}`);
+             const isHelper = matchRes.data.helperId._id === user._id;
+             setReceiver(isHelper ? matchRes.data.receiverId : matchRes.data.helperId);
+           } catch (e) {
+             console.log("Waiting for data...");
+           }
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error(err);
+        setLoading(false);
       }
     };
 
     fetchChatData();
 
-    // 2. Connect Socket
     socket = io(ENDPOINT);
     socket.emit('join_chat', matchId);
 
-    // 3. Listen for messages
     socket.on('receive_message', (message) => {
       setMessages((prev) => [...prev, message]);
     });
@@ -56,7 +72,7 @@ const ChatPage = () => {
       socket.disconnect();
       socket.off();
     };
-  }, [matchId]);
+  }, [matchId, user._id]);
 
   useEffect(() => {
     scrollToBottom();
@@ -67,92 +83,90 @@ const ChatPage = () => {
     if (!newMessage.trim()) return;
 
     try {
-      // Optimistic UI Update (Shows message immediately before backend confirms)
-      // Note: We rely on socket to confirm, but clearing input makes it feel fast.
       await api.post('/messages', {
         matchId,
         content: newMessage
       });
       setNewMessage("");
+      setShowEmojiPicker(false); // Close picker after sending
     } catch (err) {
       alert("Failed to send");
     }
   };
 
+  // --- EMOJI HANDLER ---
+  const onEmojiClick = (emojiObject) => {
+    setNewMessage((prev) => prev + emojiObject.emoji);
+  };
+
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div className="min-h-screen flex items-center justify-center bg-[#ebf2fa]">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#747def]"></div>
     </div>
   );
 
   return (
-    <div className="flex flex-col h-screen bg-[#F0F2F5] font-sans">
+    <div className="flex flex-col h-screen bg-[#e5ddd5] font-sans relative">
       
-      {/* --- HEADER (Glassmorphism) --- */}
-      <div className="fixed top-0 w-full z-10 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm px-4 py-3 flex justify-between items-center">
+      {/* Background Overlay */}
+      <div className="absolute inset-0 bg-[#ebf2fa] opacity-100 z-0"></div>
+
+      {/* --- HEADER --- */}
+      <div className="fixed top-0 w-full z-20 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => navigate('/dashboard')} 
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600"
-          >
-            <ArrowLeft size={20} />
+          <button onClick={() => navigate('/dashboard')} className="p-2 hover:bg-gray-100 rounded-full text-gray-600">
+            <ArrowLeft size={22} />
           </button>
           
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 p-[2px]">
-              <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-blue-600 font-bold">
-                {/* Fallback Avatar */}
-                <span className="text-sm">💬</span>
+            <div className="relative">
+              <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden bg-gray-100">
+                {receiver?.profileImage ? (
+                  <img src={receiver.profileImage} alt={receiver.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[#181E4B] font-bold text-lg">
+                    {receiver?.name?.charAt(0) || "?"}
+                  </div>
+                )}
               </div>
+              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
-            <div>
-              <h2 className="font-bold text-gray-800 text-sm md:text-base leading-tight">
-                Conversation
-              </h2>
-              <span className="text-xs text-green-500 font-medium flex items-center gap-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
-              </span>
+
+            <div className="flex flex-col">
+              <h2 className="font-bold text-[#181E4B] text-base leading-none mb-0.5">{receiver?.name || "Chat"}</h2>
+              <span className="text-xs text-green-600 font-medium">Online</span>
             </div>
           </div>
         </div>
 
-        {/* Header Actions (Visual Only) */}
-        <div className="flex items-center gap-2 text-blue-600">
-          <button className="p-2 hover:bg-blue-50 rounded-full"><Phone size={20} /></button>
-          <button className="p-2 hover:bg-blue-50 rounded-full"><Video size={20} /></button>
-          <button className="p-2 hover:bg-blue-50 rounded-full text-gray-400"><MoreVertical size={20} /></button>
+        <div className="flex items-center gap-3 text-[#5E6282]">
+          <button className="p-2 hover:bg-gray-50 rounded-full"><Phone size={20} /></button>
+          <button className="p-2 hover:bg-gray-50 rounded-full"><Video size={20} /></button>
+          <button className="p-2 hover:bg-gray-50 rounded-full"><MoreVertical size={20} /></button>
         </div>
       </div>
 
       {/* --- MESSAGES AREA --- */}
-      <div className="flex-1 overflow-y-auto pt-24 pb-24 px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="max-w-3xl mx-auto space-y-4">
-          
-          {/* Encryption Notice */}
+      <div 
+        className="flex-1 overflow-y-auto pt-24 pb-24 px-4 z-10"
+        onClick={() => setShowEmojiPicker(false)} // Close emoji picker if clicking chat area
+      >
+        <div className="max-w-3xl mx-auto space-y-3">
           <div className="flex justify-center mb-6">
-            <span className="text-[10px] bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full border border-yellow-200">
-              🔒 Messages are end-to-end encrypted and secure.
+            <span className="text-[10px] bg-[#fffde7] text-yellow-800 px-3 py-1 rounded-md shadow-sm border border-yellow-100">
+              🔒 Messages are end-to-end encrypted.
             </span>
           </div>
 
           {messages.map((msg, index) => {
-            const isMyMessage = msg.senderId === user._id;
+            const senderId = typeof msg.senderId === 'object' ? msg.senderId._id : msg.senderId;
+            const isMyMessage = senderId === user._id;
+
             return (
-              <div 
-                key={index} 
-                className={`flex w-full ${isMyMessage ? 'justify-end' : 'justify-start'}`}
-              >
-                <div 
-                  className={`max-w-[75%] md:max-w-[60%] px-5 py-3 rounded-2xl text-sm shadow-sm relative ${
-                    isMyMessage 
-                      ? 'bg-blue-600 text-white rounded-br-none' // My Message Style
-                      : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none' // Their Message Style
-                  }`}
-                >
-                  <p className="leading-relaxed">{msg.content}</p>
-                  <span className={`text-[10px] block text-right mt-1 opacity-70 ${
-                    isMyMessage ? 'text-blue-100' : 'text-gray-400'
-                  }`}>
+              <div key={index} className={`flex w-full ${isMyMessage ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[75%] md:max-w-[60%] px-4 py-2 rounded-2xl text-sm shadow-sm relative leading-relaxed ${isMyMessage ? 'bg-[#181E4B] text-white rounded-tr-none' : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'}`}>
+                  <p className="whitespace-pre-wrap">{msg.content}</p>
+                  <span className={`text-[10px] block text-right mt-1 ${isMyMessage ? 'text-blue-200' : 'text-gray-400'}`}>
                     {new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                   </span>
                 </div>
@@ -164,25 +178,57 @@ const ChatPage = () => {
       </div>
 
       {/* --- INPUT AREA --- */}
-      <div className="fixed bottom-0 w-full bg-white border-t border-gray-100 p-4">
+      <div className="fixed bottom-0 w-full bg-white border-t border-gray-100 p-3 z-30">
+        
+        {/* Emoji Picker Popup */}
+        {showEmojiPicker && (
+          <div className="absolute bottom-20 right-4 md:right-auto md:left-4 shadow-2xl rounded-2xl z-40 animate-in slide-in-from-bottom-5 fade-in duration-200">
+             <EmojiPicker 
+              onEmojiClick={onEmojiClick} 
+              width={300} 
+              height={400} 
+              searchDisabled={false}
+              skinTonesDisabled={true}
+              previewConfig={{ showPreview: false }}
+             />
+          </div>
+        )}
+
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={sendMessage} className="flex items-center gap-2 bg-gray-100 p-1.5 rounded-full border border-gray-200 focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-100 transition-all">
+          <form onSubmit={sendMessage} className="flex items-center gap-2">
             
-            <input 
-              type="text" 
-              className="flex-1 bg-transparent px-4 py-2 focus:outline-none text-gray-700 placeholder-gray-400"
-              placeholder="Type a message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-            />
+            <button type="button" className="p-2 text-gray-400 hover:text-[#747def] transition-colors rounded-full hover:bg-gray-50">
+              <Paperclip size={20} />
+            </button>
+
+            <div className="flex-1 bg-[#f0f2f5] rounded-full flex items-center px-4 py-2 border border-transparent focus-within:border-[#747def]/50 focus-within:bg-white focus-within:shadow-sm transition-all">
+              <input 
+                type="text" 
+                className="flex-1 bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 text-sm"
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onFocus={() => setShowEmojiPicker(false)} // Close picker when typing
+              />
+              
+              {/* Toggle Emoji Button */}
+              <button 
+                type="button" 
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className={`text-gray-400 hover:text-[#747def] transition-colors ml-2 ${showEmojiPicker ? 'text-[#747def]' : ''}`}
+              >
+                <Smile size={20} />
+              </button>
+            </div>
             
             <button 
               type="submit" 
               disabled={!newMessage.trim()}
-              className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-transform transform active:scale-95 shadow-md"
+              className="p-3 bg-[#181E4B] text-white rounded-full hover:bg-[#747def] disabled:opacity-50 disabled:scale-100 transform active:scale-95 transition-all shadow-md flex items-center justify-center"
             >
-              <Send size={18} />
+              <Send size={18} className={newMessage.trim() ? "ml-0.5" : ""} />
             </button>
+
           </form>
         </div>
       </div>

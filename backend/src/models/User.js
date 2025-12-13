@@ -2,18 +2,53 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, trim: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  passwordHash: { type: String, required: true },
-  role: { type: String, enum: ['receiver', 'helper', 'admin'], default: 'receiver' },
+  name: { 
+    type: String, 
+    required: [true, 'Please add a name'], 
+    trim: true 
+  },
+  email: { 
+    type: String, 
+    required: [true, 'Please add an email'], 
+    unique: true, 
+    lowercase: true, 
+    trim: true 
+  },
+  passwordHash: { 
+    type: String, 
+    required: true 
+  },
+  role: { 
+    type: String, 
+    enum: ['receiver', 'helper', 'admin'], 
+    default: 'receiver' 
+  },
   
-  // --- Common Profile Info ---
-  city: { type: String, required: true },
-  bio: { type: String, maxlength: 500, default: '' },
-  profileImage: { type: String, default: '' }, 
-  
-  // NEW: Added for the Profile UI Header
-  headline: { type: String, maxlength: 60, default: '' }, 
+  // --- Profile Info ---
+  city: { 
+    type: String, 
+    required: true 
+  },
+  headline: { 
+    type: String, 
+    maxlength: 60, 
+    default: '' 
+  },
+  bio: { 
+    type: String, 
+    maxlength: 500, 
+    default: '' 
+  },
+  profileImage: { 
+    type: String, 
+    default: '' 
+  }, 
+  isVerified: { 
+    type: Boolean, 
+    default: false 
+  },
+
+  // --- SOCIALS (This was missing!) ---
   socials: {
     github: { type: String, default: '' },
     linkedin: { type: String, default: '' },
@@ -29,9 +64,8 @@ const userSchema = new mongoose.Schema({
 
   receiverProfile: {
     needs: [{ type: String }] 
-  },
+  }
 
-  isVerified: { type: Boolean, default: false },
 }, { 
   timestamps: true 
 });
