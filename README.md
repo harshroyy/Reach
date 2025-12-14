@@ -8,7 +8,7 @@
 
 **Reach** is a full-stack MERN application designed to bridge the gap between people seeking help and experts willing to assist. It features role-based dashboards, real-time messaging, and status management.
 
-🔗 **Live Demo:** [https://reach-app.vercel.app](https://reach-app.vercel.app)
+🔗 **Live Demo:** [https://reach-app.vercel.app](https://reach-eta.vercel.app/)
 
 ---
 
