@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut } from 'lucide-react'; // <--- Import Icon
+import { LogOut, LayoutDashboard } from 'lucide-react'; // <--- Import Icon
 import AuthContext from '../context/AuthContext';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
@@ -76,6 +76,15 @@ const Navbar = () => {
                     Dashboard
                   </Link>
 
+                  {/* Mobile Dashboard Icon */}
+                  <Link
+                    to="/dashboard"
+                    className="md:hidden p-2 text-gray-600 hover:text-[#747def] transition-colors"
+                    title="Dashboard"
+                  >
+                    <LayoutDashboard size={24} />
+                  </Link>
+
                   {/* Divider */}
                   <div className="hidden md:block h-6 w-px bg-gray-300 mx-2"></div>
 
@@ -122,14 +131,14 @@ const Navbar = () => {
                 <>
                   <button
                     onClick={() => setIsLoginOpen(true)}
-                    className="hidden md:block px-6 py-2 rounded-full text-gray-600 hover:text-blue-600 hover:bg-white/50 transition-all duration-200 font-medium"
+                    className="px-4 md:px-6 py-2 rounded-full text-gray-600 hover:text-blue-600 hover:bg-white/50 transition-all duration-200 font-medium"
                   >
                     Login
                   </button>
 
                   <button
                     onClick={() => setIsRegisterOpen(true)}
-                    className="px-6 py-2 rounded-full bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-lg shadow-blue-600/25 font-medium"
+                    className="px-4 md:px-6 py-2 rounded-full bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-lg shadow-blue-600/25 font-medium"
                   >
                     Register
                   </button>

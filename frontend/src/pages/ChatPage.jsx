@@ -1,25 +1,25 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
-import { Send, ArrowLeft, MoreVertical, Phone, Video, Paperclip, Smile } from 'lucide-react';
-import EmojiPicker from 'emoji-picker-react'; // <--- IMPORT THIS
+import { Send, ArrowLeft, MoreVertical, Phone, Video, Paperclip, Smile, User } from 'lucide-react';
+import EmojiPicker from 'emoji-picker-react';
 import api from '../services/api';
 import AuthContext from '../context/AuthContext';
 
 // Connect to backend
-const ENDPOINT = 'http://localhost:5000'; 
+const ENDPOINT = 'http://localhost:5000';
 let socket;
 
 const ChatPage = () => {
   const { matchId } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [receiver, setReceiver] = useState(null);
-  
+
   // Emoji State
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -34,24 +34,29 @@ const ChatPage = () => {
       try {
         const res = await api.get(`/messages/${matchId}`);
         setMessages(res.data);
-        
+
         const otherUserMsg = res.data.find(m => {
           const sId = typeof m.senderId === 'object' ? m.senderId._id : m.senderId;
           return sId !== user._id;
         });
-        
+
         if (otherUserMsg && typeof otherUserMsg.senderId === 'object') {
-           setReceiver(otherUserMsg.senderId);
+          setReceiver(otherUserMsg.senderId);
         } else {
-           try {
-             const matchRes = await api.get(`/matches/${matchId}`);
-             const isHelper = matchRes.data.helperId._id === user._id;
-             setReceiver(isHelper ? matchRes.data.receiverId : matchRes.data.helperId);
-           } catch (e) {
-             console.log("Waiting for data...");
-           }
+          try {
+            const matchRes = await api.get(`/matches/${matchId}`);
+
+            // Ensure helperId and receiverId are objects (populated)
+            if (!matchRes.data.helperId || !matchRes.data.receiverId) return;
+
+            const isHelper = matchRes.data.helperId._id === user._id;
+            const targetUser = isHelper ? matchRes.data.receiverId : matchRes.data.helperId;
+            setReceiver(targetUser);
+          } catch (e) {
+            console.error("Error fetching match data:", e);
+          }
         }
-        
+
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -107,7 +112,7 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-[#e5ddd5] font-sans relative">
-      
+
       {/* Background Overlay */}
       <div className="absolute inset-0 bg-[#ebf2fa] opacity-100 z-0"></div>
 
@@ -117,17 +122,26 @@ const ChatPage = () => {
           <button onClick={() => navigate('/dashboard')} className="p-2 hover:bg-gray-100 rounded-full text-gray-600">
             <ArrowLeft size={22} />
           </button>
-          
+
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden bg-gray-100">
+              <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden bg-gray-100 flex items-center justify-center">
                 {receiver?.profileImage ? (
-                  <img src={receiver.profileImage} alt={receiver.name} className="w-full h-full object-cover" />
+                  <img
+                    src={receiver.profileImage}
+                    alt={receiver.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                  />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[#181E4B] font-bold text-lg">
-                    {receiver?.name?.charAt(0) || "?"}
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
+                    <User size={24} />
                   </div>
                 )}
+                {/* Fallback for Image Error (Hidden by default unless error occurs) */}
+                <div className="w-full h-full hidden items-center justify-center bg-gray-200 text-gray-500 absolute inset-0">
+                  <User size={24} />
+                </div>
               </div>
               <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
@@ -147,7 +161,7 @@ const ChatPage = () => {
       </div>
 
       {/* --- MESSAGES AREA --- */}
-      <div 
+      <div
         className="flex-1 overflow-y-auto pt-24 pb-24 px-4 z-10"
         onClick={() => setShowEmojiPicker(false)} // Close emoji picker if clicking chat area
       >
@@ -167,7 +181,7 @@ const ChatPage = () => {
                 <div className={`max-w-[75%] md:max-w-[60%] px-4 py-2 rounded-2xl text-sm shadow-sm relative leading-relaxed ${isMyMessage ? 'bg-[#181E4B] text-white rounded-tr-none' : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'}`}>
                   <p className="whitespace-pre-wrap">{msg.content}</p>
                   <span className={`text-[10px] block text-right mt-1 ${isMyMessage ? 'text-blue-200' : 'text-gray-400'}`}>
-                    {new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
               </div>
@@ -179,50 +193,50 @@ const ChatPage = () => {
 
       {/* --- INPUT AREA --- */}
       <div className="fixed bottom-0 w-full bg-white border-t border-gray-100 p-3 z-30">
-        
+
         {/* Emoji Picker Popup */}
         {showEmojiPicker && (
           <div className="absolute bottom-20 right-4 md:right-auto md:left-4 shadow-2xl rounded-2xl z-40 animate-in slide-in-from-bottom-5 fade-in duration-200">
-             <EmojiPicker 
-              onEmojiClick={onEmojiClick} 
-              width={300} 
-              height={400} 
+            <EmojiPicker
+              onEmojiClick={onEmojiClick}
+              width={300}
+              height={400}
               searchDisabled={false}
               skinTonesDisabled={true}
               previewConfig={{ showPreview: false }}
-             />
+            />
           </div>
         )}
 
         <div className="max-w-3xl mx-auto">
           <form onSubmit={sendMessage} className="flex items-center gap-2">
-            
+
             <button type="button" className="p-2 text-gray-400 hover:text-[#747def] transition-colors rounded-full hover:bg-gray-50">
               <Paperclip size={20} />
             </button>
 
             <div className="flex-1 bg-[#f0f2f5] rounded-full flex items-center px-4 py-2 border border-transparent focus-within:border-[#747def]/50 focus-within:bg-white focus-within:shadow-sm transition-all">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 className="flex-1 bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 text-sm"
                 placeholder="Type a message..."
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onFocus={() => setShowEmojiPicker(false)} // Close picker when typing
               />
-              
+
               {/* Toggle Emoji Button */}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 className={`text-gray-400 hover:text-[#747def] transition-colors ml-2 ${showEmojiPicker ? 'text-[#747def]' : ''}`}
               >
                 <Smile size={20} />
               </button>
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               disabled={!newMessage.trim()}
               className="p-3 bg-[#181E4B] text-white rounded-full hover:bg-[#747def] disabled:opacity-50 disabled:scale-100 transform active:scale-95 transition-all shadow-md flex items-center justify-center"
             >

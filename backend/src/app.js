@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/requests', require('./routes/requestRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
+app.use('/api/matches', require('./routes/matchRoutes'));
 
 // Simple test route to check if server is working
 app.get('/', (req, res) => {
