@@ -7,7 +7,9 @@ import api from '../services/api';
 import AuthContext from '../context/AuthContext';
 
 // Connect to backend
-const ENDPOINT = 'http://localhost:5000';
+const ENDPOINT = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace('/api', '') // Remove '/api' for socket
+  : 'http://localhost:5000';
 let socket;
 
 const ChatPage = () => {
