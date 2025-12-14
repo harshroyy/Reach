@@ -1,77 +1,56 @@
-# 🤝 Reach - Real-Time Help Matching Platform
+# 🤝 Reach - Collaborative Help Platform
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-**Reach** is a full-stack MERN application designed to bridge the gap between people seeking help and experts willing to assist. It features role-based dashboards, real-time messaging, and status management.
+**Reach** is a real-time web application that connects people needing assistance ("Receivers") with available experts ("Helpers"). It features a role-based dashboard, instant messaging via WebSockets, and a live status tracking system.
 
-🔗 **Live Demo:** [https://reach-app.vercel.app](https://reach-eta.vercel.app/)
+🔴 **Live Demo:** [https://reach-app.vercel.app](https://reach-eta.vercel.app/)
 
 ---
 
-## 🚀 Key Features
+## ✨ Features Implemented
 
-### 👤 Role-Based System
-* **Receiver:** Browse helpers, filter by skills, send detailed requests, and track status.
-* **Helper:** Manage incoming requests, toggle "Available/Busy" status, and view active connections.
+### 🎭 User Roles & Authentication
+* **Dual Role System:** Users register as either a **Receiver** or a **Helper**.
+* **Secure Auth:** JWT (JSON Web Token) authentication with `bcryptjs` password hashing.
+* **Profile Management:** Users can update their bio, skills, profile picture, and social links.
 
-### 💬 Real-Time Chat System
-* **Instant Messaging:** Powered by **Socket.io** for low-latency communication.
-* **Rich Media:** Emoji support, message timestamps, and read receipts logic.
-* **Secure:** End-to-end user identification with visual profiles in chat.
+### 📡 Real-Time Chat
+* **Instant Messaging:** Powered by `socket.io` for zero-latency communication.
+* **Chat History:** Persistent message storage in MongoDB.
+* **Smart UI:** Dynamic header shows the chatting partner's name and avatar.
+* **Rich Features:** Emoji picker integration and timestamped messages.
 
-### 🛠️ Advanced Dashboard
-* **Glassmorphism UI:** Modern, clean interface using Tailwind CSS.
-* **Smart Filtering:** Search helpers by name or skill.
-* **Ticket System:** Visual representation of requests with "Accept/Decline" workflows.
+### 🖥️ Role-Specific Dashboards
+**For Receivers:**
+* **Helper Discovery:** Search and filter helpers by name or skill.
+* **Request Management:** Send help requests with details and track their status (Pending/Accepted/Declined).
+* **Status Indicators:** Visual cues for request states (Yellow/Green/Red).
 
-### 🔒 Security & Auth
-* **JWT Authentication:** Secure login and session management.
-* **Password Hashing:** Bcrypt encryption for user data safety.
-* **Protected Routes:** Middleware to prevent unauthorized access.
+**For Helpers:**
+* **Availability Toggle:** Switch profile status between "Online" and "Busy" to control visibility.
+* **Request Ticket System:** View incoming requests in a "Ticket" style layout.
+* **Action Control:** Accept or Decline requests directly from the dashboard.
+* **Tabbed View:** Separate views for "New Requests" and "Active Connections".
+
+### ⚙️ Technical Highlights
+* **Glassmorphism UI:** Custom-styled components using Tailwind CSS.
+* **Toast Notifications:** Replaced default alerts with `react-hot-toast` for success/error feedback.
+* **Environment Config:** Production-ready configuration separating Localhost and Cloud URLs.
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
-* React.js (Vite)
-* Tailwind CSS (Styling)
-* Lucide React (Icons)
-* Socket.io Client (Real-time comms)
-* React Hot Toast (Notifications)
-
-**Backend:**
-* Node.js & Express.js
-* MongoDB & Mongoose (Database)
-* Socket.io (WebSockets)
-* JSON Web Token (Auth)
-
-**Deployment:**
-* **Frontend:** Vercel
-* **Backend:** Render
-* **Database:** MongoDB Atlas
-
+| Domain | Technologies |
+| :--- | :--- |
+| **Frontend** | React (Vite), Tailwind CSS, Lucide React (Icons), Axios, Socket.io-client |
+| **Backend** | Node.js, Express.js, Cors, Dotenv |
+| **Database** | MongoDB (Mongoose ODM) |
+| **Real-Time** | Socket.io (WebSockets) |
+| **Deployment** | Frontend on **Vercel**, Backend on **Render**, Database on **MongoDB Atlas** |
 ---
-
-## 📸 Screenshots
-
-*(Add your screenshots here, e.g., /screenshots/dashboard.png)*
-
-| Dashboard | Chat Interface |
-|:---:|:---:|
-| ![Dashboard](https://via.placeholder.com/600x400?text=Dashboard+View) | ![Chat](https://via.placeholder.com/600x400?text=Chat+Interface) |
-
----
-
-## 💻 Run Locally
-
-Clone the project and follow these steps to set it up on your local machine.
-
-### 1. Clone the Repository
-```bash
-git clone [https://github.com/your-username/reach-app.git](https://github.com/your-username/reach-app.git)
-cd reach-app
