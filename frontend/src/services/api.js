@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// Debugging: Print this to the browser console to see what Vercel sees
+console.log("Current API URL:", import.meta.env.VITE_API_URL);
+
 // Automatically chooses the right URL
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
