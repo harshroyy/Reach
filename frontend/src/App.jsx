@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext, { AuthProvider } from './context/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
 // Import Components
 import Navbar from './components/Navbar'; // <--- NEW IMPORT

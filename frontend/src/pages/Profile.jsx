@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
 import api from '../services/api';
+import toast from 'react-hot-toast';
 
 const Profile = () => {
   const { user, login } = useContext(AuthContext);
@@ -47,6 +48,8 @@ const Profile = () => {
 
   const handleSave = async () => {
     setLoading(true);
+    const toastId = toast.loading("Saving changes...");
+
     try {
       const payload = {
         name: formData.name,
@@ -72,9 +75,10 @@ const Profile = () => {
       const res = await api.put('/users/profile', payload);
       login(res.data, res.data.token);
       setIsEditing(false);
+      toast.success("Profile updated successfully!", { id: toastId });
     } catch (err) {
       console.error(err);
-      alert("Failed to update profile");
+      toast.error("Failed to update profile", { id: toastId });
     } finally {
       setLoading(false);
     }

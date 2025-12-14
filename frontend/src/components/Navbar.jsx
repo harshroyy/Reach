@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, LayoutDashboard } from 'lucide-react'; // <--- Import Icon
 import AuthContext from '../context/AuthContext';
@@ -13,6 +13,15 @@ const Navbar = () => {
   // State for Modals
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -48,7 +57,10 @@ const Navbar = () => {
       )}
 
       {/* --- NAVIGATION BAR --- */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white border-b border-white/20">
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? 'backdrop-blur-md bg-white/70 border-b border-white/20 shadow-sm'
+          : 'bg-white border-b border-gray-100'
+        }`}>
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-4">
           <div className="flex items-center justify-between">
 
