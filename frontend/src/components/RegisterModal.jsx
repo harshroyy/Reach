@@ -49,8 +49,9 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         onClick={onClose}
       ></div>
 
-      {/* Main Modal Container - Auto height (No internal slider) */}
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-5xl flex flex-col md:flex-row animate-in fade-in zoom-in duration-300 z-10 my-8">
+      {/* Main Modal Container - Scaled for 100% Zoom */}
+      {/* Changed: max-w-5xl -> max-w-4xl, my-8 -> my-4 */}
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl flex flex-col md:flex-row animate-in fade-in zoom-in duration-300 z-10 my-4">
 
         {/* Close Button */}
         <button
@@ -60,7 +61,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           <X size={24} />
         </button>
 
-        {/* LEFT SIDE: Image (Stretches to match form height) */}
+        {/* LEFT SIDE: Image */}
         <div className="hidden md:block w-1/2 relative bg-gray-900 rounded-l-3xl overflow-hidden min-h-full">
           <img
             src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1000&auto=format&fit=crop"
@@ -75,23 +76,26 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           </div>
         </div>
 
-        {/* RIGHT SIDE: Form (Full height, no scrollbar) */}
-        <div className="w-full md:w-1/2 p-8 md:p-10 bg-white rounded-r-3xl flex flex-col justify-center">
+        {/* RIGHT SIDE: Form */}
+        {/* Changed: p-8 md:p-10 -> p-6 md:p-8 to save vertical space */}
+        <div className="w-full md:w-1/2 p-6 md:p-8 bg-white rounded-r-3xl flex flex-col justify-center">
 
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "sans-serif" }}>
+          {/* Changed: mb-6 -> mb-5 */}
+          <div className="text-center mb-5">
+            <h2 className="text-3xl font-bold text-gray-900 mb-1" style={{ fontFamily: "sans-serif" }}>
               Hi <span style={{ color: "#747def" }}>There!</span>
             </h2>
-            <p className="text-gray-500">Connect, support, and grow with us.</p>
+            <p className="text-gray-500 text-sm">Connect, support, and grow with us.</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 flex items-center justify-center">
+            <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 flex items-center justify-center">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Changed: space-y-4 -> space-y-3 to fit all fields cleanly */}
+          <form onSubmit={handleSubmit} className="space-y-3">
 
             {/* Full Name */}
             <div>
@@ -102,7 +106,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   name="name"
                   type="text"
                   required
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                  // Changed: py-3 -> py-2.5
+                  className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                   placeholder="Your Full Name"
                   value={formData.name}
                   onChange={handleChange}
@@ -119,7 +124,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   name="email"
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                  // Changed: py-3 -> py-2.5
+                  className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={handleChange}
@@ -136,7 +142,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   name="password"
                   type="password"
                   required
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                  // Changed: py-3 -> py-2.5
+                  className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
@@ -153,7 +160,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   name="city"
                   type="text"
                   required
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                  // Changed: py-3 -> py-2.5
+                  className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                   placeholder="Your City"
                   value={formData.city}
                   onChange={handleChange}
@@ -164,11 +172,12 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
             {/* Role Selection - Compact */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">I am here to...</label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: 'receiver' })}
-                  className={`p-3 rounded-xl border-2 flex flex-col items-center justify-center gap-1 transition-all duration-200 ${formData.role === 'receiver'
+                  // Changed: p-3 -> p-2.5
+                  className={`p-2.5 rounded-xl border-2 flex flex-col items-center justify-center gap-1 transition-all duration-200 ${formData.role === 'receiver'
                       ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
                       : 'border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50'
                     }`}
@@ -179,7 +188,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: 'helper' })}
-                  className={`p-3 rounded-xl border-2 flex flex-col items-center justify-center gap-1 transition-all duration-200 ${formData.role === 'helper'
+                  // Changed: p-3 -> p-2.5
+                  className={`p-2.5 rounded-xl border-2 flex flex-col items-center justify-center gap-1 transition-all duration-200 ${formData.role === 'helper'
                       ? 'bg-purple-50 border-purple-500 text-purple-700 shadow-sm'
                       : 'border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50'
                     }`}
@@ -193,14 +203,16 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-[#747def] text-white rounded-xl font-bold text-lg shadow-xl shadow-[#747def]/20 hover:shadow-[#747def]/40 hover:scale-[1.01] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+              // Changed: py-3.5 -> py-3, mt-4 -> mt-3
+              className="w-full py-3 bg-[#747def] text-white rounded-xl font-bold text-lg shadow-xl shadow-[#747def]/20 hover:shadow-[#747def]/40 hover:scale-[1.01] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-3"
             >
               {loading && <Loader2 size={20} className="animate-spin" />}
               {loading ? 'Joining...' : 'Join Reach'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          {/* Changed: mt-6 -> mt-4 */}
+          <div className="mt-4 text-center">
             <p className="text-gray-500 text-sm">
               Already have an account?{' '}
               <button

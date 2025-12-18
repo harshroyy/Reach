@@ -40,8 +40,9 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
         onClick={onClose}
       ></div>
 
-      {/* Main Modal Container - Split Layout */}
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[600px] animate-in fade-in zoom-in duration-300">
+      {/* Main Modal Container - Scaled for 100% Zoom */}
+      {/* Changed: max-w-5xl -> max-w-4xl, md:h-[600px] -> md:h-[550px] */}
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[550px] animate-in fade-in zoom-in duration-300">
 
         {/* Close Button */}
         <button
@@ -51,7 +52,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
           <X size={24} />
         </button>
 
-        {/* LEFT SIDE: Image (Hidden on mobile) */}
+        {/* LEFT SIDE: Image */}
         <div className="hidden md:block w-1/2 relative bg-gray-900">
           {/* Space/Astronaut Image */}
           <img
@@ -67,31 +68,35 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
           </div>
         </div>
 
-        {/* RIGHT SIDE: Your Form Logic */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto bg-white flex flex-col justify-center">
+        {/* RIGHT SIDE: Form Logic */}
+        {/* Changed: p-8 md:p-12 -> p-6 md:p-10 to reduce internal spacing */}
+        <div className="w-full md:w-1/2 p-6 md:p-10 overflow-y-auto bg-white flex flex-col justify-center">
 
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold text-gray-900 mb-3" style={{ fontFamily: "sans-serif, Arial, Helvetica" }}>
+          {/* Changed: mb-10 -> mb-8, text-4xl -> text-3xl */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "sans-serif, Arial, Helvetica" }}>
               Hi <span style={{ color: "#747def" }}>Again!</span>
             </h2>
-            <p className="text-gray-500 text-lg">Nice to see you back!</p>
+            <p className="text-gray-500 text-base">Nice to see you back!</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 flex items-center justify-center">
+            <div className="mb-6 p-3 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 flex items-center justify-center">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Changed: space-y-6 -> space-y-5 */}
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">Email</label>
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
                 <input
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                  // Changed: py-3.5 -> py-3 (Reduced height)
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -100,13 +105,14 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 ml-1">Password</label>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
                 <input
                   type="password"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                  // Changed: py-3.5 -> py-3 (Reduced height)
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -125,14 +131,16 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-[#747def] text-white rounded-xl font-bold text-lg shadow-xl shadow-[#747def]/20 hover:shadow-[#747def]/40 hover:scale-[1.01] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              // Changed: py-4 -> py-3, text-lg -> text-base (Reduced button bulk)
+              className="w-full py-3 bg-[#747def] text-white rounded-xl font-bold text-base shadow-xl shadow-[#747def]/20 hover:shadow-[#747def]/40 hover:scale-[1.01] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading && <Loader2 size={22} className="animate-spin" />}
+              {loading && <Loader2 size={20} className="animate-spin" />}
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
-          <div className="mt-8 text-center">
+          {/* Changed: mt-8 -> mt-6 */}
+          <div className="mt-6 text-center">
             <p className="text-gray-500">
               Don't have an account?{' '}
               {/* 2. Updated to use the prop function instead of Link */}

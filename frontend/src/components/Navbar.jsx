@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, LayoutDashboard } from 'lucide-react'; // <--- Import Icon
+import { LogOut, LayoutDashboard } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
@@ -58,15 +58,16 @@ const Navbar = () => {
 
       {/* --- NAVIGATION BAR --- */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? 'backdrop-blur-md bg-white/70 border-b border-white/20 shadow-sm'
-          : 'bg-white border-b border-gray-100'
+        ? 'backdrop-blur-md bg-white/90 border-b border-gray-200 shadow-sm' // Scrolled State
+        : 'bg-white border-b border-gray-100' // Initial State (White background restored)
         }`}>
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-4">
-          <div className="flex items-center justify-between">
+
+        {/* Alignment Fix: max-w-7xl to match Home Page */}
+<div className="w-full px-6 md:px-16 py-4">          <div className="flex items-center justify-between">
 
             {/* Logo Section */}
             <Link to="/" className="flex items-center gap-3">
-              <div className="h-12 w-auto flex items-center justify-center">
+              <div className="h-10 md:h-12 w-auto flex items-center justify-center">
                 <img
                   src={logo2}
                   alt="Reach Logo"
@@ -134,7 +135,7 @@ const Navbar = () => {
                     <div className="w-6 h-6 rounded-full border-2 border-white/80 flex items-center justify-center">
                       <LogOut size={12} strokeWidth={3} className="ml-0.5 text-white" />
                     </div>
-                    <span>Logout</span>
+                    <span className="hidden lg:inline">Logout</span>
                   </button>
                   {/* --------------------------- */}
                 </>
@@ -150,7 +151,7 @@ const Navbar = () => {
 
                   <button
                     onClick={() => setIsRegisterOpen(true)}
-                    className="px-4 md:px-6 py-2 rounded-full bg-[#747def] text-white hover:bg-[#5e63c2] transition-all duration-200 shadow-lg shadow-blue-600/25 font-medium"
+                    className="px-4 md:px-6 py-2 rounded-full bg-[#25c19b] text-white hover:bg-teal-700 transition-all duration-200 shadow-lg shadow-[#25c19b]/10 font-medium"
                   >
                     Register
                   </button>
