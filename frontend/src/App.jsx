@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ChatPage from './pages/ChatPage';
 import Profile from './pages/Profile';
+import About from './pages/About';
 
 // --- Main App ---
 function App() {
@@ -20,9 +21,9 @@ function App() {
     <Router>
       <AuthProvider>
         <div className="min-h-screen bg-gray-50">
-          
+
           {/* Global Navbar - Shows everywhere */}
-          <Navbar /> 
+          <Navbar />
 
           <Routes>
             <Route path="/" element={<Home />} />
@@ -31,6 +32,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/chat/:matchId" element={<ChatPage />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </div>
       </AuthProvider>
