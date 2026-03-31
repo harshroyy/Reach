@@ -20,6 +20,7 @@ import {
 import heroImg from '../assets/hero.jpg';
 import logo2 from '../assets/logo2.png';
 import helpImg from '../assets/help.png';
+import community3 from '../assets/Community3.png';
 
 // Components
 import LiquidGlassCard from '../components/LiquidGlassCard';
@@ -198,6 +199,58 @@ const Home = () => {
       </section>
 
 
+
+      {/* --- COMMUNITY IMAGE --- */}
+      <section className="py-24 px-6 md:px-12 relative">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <div className="w-full grid lg:grid-cols-12 gap-12 items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-[0_25px_60px_-15px_rgba(37,193,155,0.15)] rounded-[3rem] p-8 md:p-16 relative overflow-visible transition-all duration-500 hover:shadow-[0_30px_70px_-15px_rgba(37,193,155,0.2)]">
+            
+            {/* Internal decorative glow */}
+            <div className="absolute top-0 right-0 w-[80%] h-full bg-gradient-to-l from-[#25c19b]/10 to-transparent pointer-events-none -z-10 rounded-[3rem]"></div>
+            
+            {/* Left Column: Text & Stats */}
+            <div className="space-y-8 text-left z-10 lg:col-span-5">
+              <div className="space-y-4">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-teal-50 border border-teal-100/50 text-teal-600 font-bold text-sm tracking-wider uppercase">
+                  Global Reach
+                </div>
+                <h2 
+                  className="text-4xl md:text-5xl font-bold text-[#181E4B] leading-tight"
+                  style={{ fontFamily: "'Vollkorn', 'Volkhov', serif" }}
+                >
+                  Kindness Knows No Borders.
+                </h2>
+                <p className="text-gray-500 text-lg leading-relaxed max-w-md">
+                  Whether you're right around the corner or across the world, our platform connects people instantly. See how the community is coming together.
+                </p>
+              </div>
+
+              {/* Little Stats Row */}
+              <div className="flex gap-8 pt-2">
+                <div>
+                  <h4 className="text-3xl font-bold text-[#25c19b] mb-1">10k+</h4>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Active Helpers</p>
+                </div>
+                <div className="w-px bg-gray-200"></div>
+                <div>
+                  <h4 className="text-3xl font-bold text-[#747def]">50+</h4>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Countries</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Image */}
+            <div className="relative z-10 w-full flex justify-center lg:justify-end lg:col-span-7">
+              <img 
+                src={community3} 
+                alt="Community Interactions" 
+                className="w-[120%] md:w-full lg:w-[115%] max-w-none lg:-mr-8 h-auto object-contain drop-shadow-2xl mix-blend-multiply hover:scale-[1.03] transition-transform duration-700 ease-out"
+              />
+            </div>
+
+          </div>
+        </div>
+      </section>
 
       {/* --- ABOUT/MISSION SECTION --- */}
       <section className="py-24 px-6 md:px-12 bg-transparent relative">
