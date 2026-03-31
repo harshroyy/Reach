@@ -20,7 +20,7 @@ import {
 import heroImg from '../assets/hero.jpg';
 import logo2 from '../assets/logo2.png';
 import helpImg from '../assets/help.png';
-import community3 from '../assets/Community3.png';
+import community3 from '../assets/community3.png';
 
 // Components
 import LiquidGlassCard from '../components/LiquidGlassCard';
